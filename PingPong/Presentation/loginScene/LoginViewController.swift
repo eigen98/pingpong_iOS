@@ -40,11 +40,13 @@ class LoginViewController : UIViewController {
     
     let validation = Validation()
     
+    
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         attribute()
         layout()
+        
         
         
         
@@ -65,7 +67,7 @@ class LoginViewController : UIViewController {
         pwTextField.rx.text.orEmpty
             .bind(to: validation.passwordText)
             .disposed(by: disposeBag)
-        
+        //비밀번호 숨기기 버튼
         pwShowButtn.rx.tap
             .asObservable()
             .withUnretained(self)
@@ -84,6 +86,30 @@ class LoginViewController : UIViewController {
             })
             .disposed(by: disposeBag)
         
+        
+        
+        //로그인 상태 유지 버튼
+        checkbox.rx.tap.asObservable()
+            .withUnretained(self)
+            .map{ owner, str in
+                owner.checkbox.currentImage?.isEqual(UIImage(systemName: "rectangle")) ?? false
+            }.bind(onNext: { [weak self] Status in
+                guard let self = self else{ return }
+                viewModel.isCheckedBox(Status)
+            }).disposed(by: disposeBag)
+        
+        viewModel.autoLoginCheck.asDriver(onErrorJustReturn: false)
+            .drive(onNext : { [weak self] status in
+                guard let self = self else { return }
+                self.didCheckAutoLoginBox(status)
+            }).disposed(by: disposeBag)
+        
+        //회원가입 버튼 클릭 이벤트
+        signUpButton.rx.tap.asObservable()
+            .subscribe(onNext : {
+                let signUpViewController = SignUpViewController()
+                self.navigationController?.pushViewController(signUpViewController, animated: true)
+            })
         
         
         let emailValidObservable = validation.isEmailVaild
@@ -113,6 +139,8 @@ class LoginViewController : UIViewController {
         })
         
         
+        
+        //
         
     }
     
@@ -182,11 +210,11 @@ class LoginViewController : UIViewController {
             $0.width.equalTo(1)
             $0.height.equalTo(10)
         }
-//        signUpButton.snp.makeConstraints{
-//            $0.width.equalTo(30)
-//            $0.height.equalTo(18)
-//
-//        }
+        signUpButton.snp.makeConstraints{
+            $0.width.equalTo(findPwButton.snp.width)
+            //$0.height.equalTo(18)
+
+        }
 //        findPwButton.snp.makeConstraints{
 //            $0.width.equalTo(30)
 //            $0.height.equalTo(18)
@@ -263,6 +291,14 @@ class LoginViewController : UIViewController {
         } else {
             pwShowButtn.setImage(UIImage(systemName: "eye"), for: .normal)
             pwTextField.isSecureTextEntry = false
+        }
+    }
+    //체크박스 클릭 이벤트 메소드
+    func didCheckAutoLoginBox(_ ischecked : Bool){
+        if ischecked {
+            checkbox.setImage(UIImage(systemName: "checkmark.square"), for: .normal)
+        }else {
+            checkbox.setImage(UIImage(systemName: "rectangle"), for: .normal)
         }
     }
 }
