@@ -108,7 +108,10 @@ class LoginViewController : UIViewController {
         signUpButton.rx.tap.asObservable()
             .subscribe(onNext : {
                 let signUpViewController = SignUpViewController()
+                let signUpViewModel = SignUpViewModel()
+                signUpViewController.bind(viewModel: signUpViewModel)
                 self.navigationController?.pushViewController(signUpViewController, animated: true)
+            
             })
         
         

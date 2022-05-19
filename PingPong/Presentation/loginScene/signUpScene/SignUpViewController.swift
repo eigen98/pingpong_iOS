@@ -21,18 +21,20 @@ class SignUpViewController : UIViewController {
     let teacherButton = UIButton()
     let studentButton = UIButton()
     
-    let signUpViewModel = SignUpViewModel()
+    let nextButton = UIButton()
+    
+//    let signUpViewModel = SignUpViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: nil)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "arrow.left"), style: .plain, target: self, action: #selector(tapMoveBack(_:)))
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
         
-        bind(viewModel: signUpViewModel)
+//        bind(viewModel: signUpViewModel)
         attribute()
         layout()
         
@@ -48,19 +50,40 @@ class SignUpViewController : UIViewController {
         teacherButton.rx.tap.asObservable()
             .withUnretained(self)
             .map{owner, str in
-                owner.teacherButton.isEqual(UIImage(named: "teacher_disabled")) ?? false
+                owner.teacherButton.currentImage?.isEqual(UIImage(named: "teacher_activated")) ?? false
+            }.bind(onNext: { [weak self] status in
+                guard let self = self else{ return }
+                viewModel.tapTypeButton(status)
+                print("선생님 여부 : \(status)")
+            }).disposed(by: disposeBag)
+        
+        //UIBind
+        studentButton.rx.tap.asObservable()
+            .withUnretained(self)
+            .map{owner, str in
+                owner.teacherButton.currentImage?.isEqual(UIImage(named: "teacher_activated")) ?? false
             }.bind(onNext: { [weak self] status in
                 guard let self = self else{ return }
                 viewModel.tapTypeButton(status)
             }).disposed(by: disposeBag)
         
-        viewModel.typeOfUser.asDriver(onErrorJustReturn: false){
-            
-        }
+        viewModel.typeOfUser.asDriver(onErrorJustReturn: false)
+            .drive(onNext : { [weak self] status in
+                guard let self = self else { return }
+                self.tapTypeUIButton(status)
+            }).disposed(by: disposeBag)
+        
+        //다음 버튼 이벤트
+        nextButton.rx.tap.asObservable()
+            .subscribe(onNext : {
+                let signUpEmailVC = SignUpEmailViewController()
+                signUpEmailVC.bind(viewModel: viewModel)
+                self.navigationController?.pushViewController(signUpEmailVC, animated: true)
+            })
     }
     
     func layout(){
-        [typePleaseLabel, teacherButton, studentButton].forEach{
+        [typePleaseLabel, teacherButton, studentButton, nextButton].forEach{
             view.addSubview($0)
         }
         
@@ -81,6 +104,10 @@ class SignUpViewController : UIViewController {
             $0.height.equalTo(152)
             
         }
+        nextButton.snp.makeConstraints{
+            $0.bottom.trailing.leading.equalToSuperview()
+            $0.height.equalTo(56)
+        }
     }
     func attribute(){
         typePleaseLabel.text = "가입 유형을 선택해주세요"
@@ -89,7 +116,9 @@ class SignUpViewController : UIViewController {
         teacherButton.setImage(UIImage(named: "teacher_disabled"), for: .normal)
         studentButton.setImage(UIImage(named: "student_disabled"), for: .normal)
         
-        
+        nextButton.setTitle( "다음", for: .normal)
+        nextButton.backgroundColor = .blue
+        nextButton.tintColor = .white
     }
     
     
@@ -104,5 +133,9 @@ class SignUpViewController : UIViewController {
         }
     }
     
+    
+    @objc func tapMoveBack(_ : UIButton){
+        navigationController?.popViewController(animated: true)
+    }
     
 }

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EE82C7042835E8EE001F4CDB /* SignUpEmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE82C7032835E8EE001F4CDB /* SignUpEmailViewController.swift */; };
+		EE82C7062835F9FD001F4CDB /* SignUpPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE82C7052835F9FD001F4CDB /* SignUpPasswordViewController.swift */; };
+		EE82C7082835FBA6001F4CDB /* SignUpNameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE82C7072835FBA6001F4CDB /* SignUpNameViewController.swift */; };
 		EE9F0AF228335C37004A3378 /* UITextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE9F0AF128335C37004A3378 /* UITextField+.swift */; };
 		EE9F0AF7283367BD004A3378 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = EE9F0AF6283367BD004A3378 /* FirebaseAnalytics */; };
 		EE9F0AF9283367BD004A3378 /* FirebaseAnalyticsOnDeviceConversion in Frameworks */ = {isa = PBXBuildFile; productRef = EE9F0AF8283367BD004A3378 /* FirebaseAnalyticsOnDeviceConversion */; };
@@ -41,6 +44,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EE82C7032835E8EE001F4CDB /* SignUpEmailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpEmailViewController.swift; sourceTree = "<group>"; };
+		EE82C7052835F9FD001F4CDB /* SignUpPasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpPasswordViewController.swift; sourceTree = "<group>"; };
+		EE82C7072835FBA6001F4CDB /* SignUpNameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpNameViewController.swift; sourceTree = "<group>"; };
 		EE9F0AF128335C37004A3378 /* UITextField+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+.swift"; sourceTree = "<group>"; };
 		EE9F0B1628336B8A004A3378 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EE9F0B1828338634004A3378 /* Validation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Validation.swift; sourceTree = "<group>"; };
@@ -100,6 +106,9 @@
 			children = (
 				EEA333652834B8FC0075A5A1 /* SignUpViewController.swift */,
 				EEA333672834B9080075A5A1 /* SignUpViewModel.swift */,
+				EE82C7032835E8EE001F4CDB /* SignUpEmailViewController.swift */,
+				EE82C7052835F9FD001F4CDB /* SignUpPasswordViewController.swift */,
+				EE82C7072835FBA6001F4CDB /* SignUpNameViewController.swift */,
 			);
 			path = signUpScene;
 			sourceTree = "<group>";
@@ -276,13 +285,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EE82C7042835E8EE001F4CDB /* SignUpEmailViewController.swift in Sources */,
 				EEABF4B728324642005BDA2D /* LoginViewModel.swift in Sources */,
 				EEA333662834B8FC0075A5A1 /* SignUpViewController.swift in Sources */,
 				EEA333682834B9080075A5A1 /* SignUpViewModel.swift in Sources */,
 				EE9F0AF228335C37004A3378 /* UITextField+.swift in Sources */,
 				EEABF4B528324633005BDA2D /* LoginViewController.swift in Sources */,
 				EEABF49428323EBB005BDA2D /* AppDelegate.swift in Sources */,
+				EE82C7062835F9FD001F4CDB /* SignUpPasswordViewController.swift in Sources */,
 				EE9F0B1928338634004A3378 /* Validation.swift in Sources */,
+				EE82C7082835FBA6001F4CDB /* SignUpNameViewController.swift in Sources */,
 				EEABF49628323EBB005BDA2D /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
