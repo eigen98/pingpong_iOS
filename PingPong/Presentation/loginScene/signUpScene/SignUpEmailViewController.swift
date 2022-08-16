@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import RxSwift
 //이메일 입력 뷰(두번째)
 class SignUpEmailViewController : UIViewController{
     
@@ -14,6 +15,7 @@ class SignUpEmailViewController : UIViewController{
     let pleaseEmailLabel = UILabel()
     let emailTextField = UITextField()
     let nextButton = UIButton()
+    let disposeBag = DisposeBag()
     
     
     override func viewDidLoad() {
@@ -62,6 +64,8 @@ class SignUpEmailViewController : UIViewController{
         pleaseEmailLabel.font = .systemFont(ofSize: 16)
         
         emailTextField.font = .systemFont(ofSize: 14)
+        self.emailTextField.autocapitalizationType = .none
+        
         emailTextField.placeholder = "이메일을 입력해주세요."
         emailTextField.layer.borderWidth = 1
         emailTextField.layer.cornerRadius = 5
@@ -76,14 +80,19 @@ class SignUpEmailViewController : UIViewController{
         //다음 버튼 이벤트
         nextButton.rx.tap.asObservable()
             .subscribe(onNext : {
+                
                 let signUpPasswordViewController = SignUpPasswordViewController()
                 signUpPasswordViewController.bind(viewModel: viewModel)
                 self.navigationController?.pushViewController(signUpPasswordViewController, animated: true)
-            })
+            }).disposed(by: disposeBag )
         
         
         emailTextField.rx.text
             .asObservable()
+            .subscribe(onNext : { email in
+                viewModel.email = email ?? ""
+                viewModel.emailKey = DatabaseManager.convertEmail(email: email ?? "")
+            }).disposed(by: disposeBag)
     }
     
     

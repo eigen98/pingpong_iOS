@@ -7,12 +7,14 @@
 
 import Foundation
 import UIKit
+import RxSwift
 
 class SignUpPasswordViewController : UIViewController {
     
     let pleasePwLabel = UILabel()
     let pwTextField = UITextField()
     let nextButton = UIButton()
+    let disposeBag = DisposeBag()
     
     //비밀번호 숨기기 버튼
     let pwShowButtn = UIButton()
@@ -67,10 +69,12 @@ class SignUpPasswordViewController : UIViewController {
     }
     
     func attribute(){
+       
         pleasePwLabel.text = "비밀번호를 입력해주세요"
         pleasePwLabel.font = .systemFont(ofSize: 16)
         
         pwTextField.font = .systemFont(ofSize: 14)
+        self.pwTextField.autocapitalizationType = .none //첫문자 소문자
         pwTextField.placeholder = "비밀번호를 입력해주세요."
         pwTextField.layer.borderWidth = 1
         pwTextField.layer.cornerRadius = 5
@@ -93,6 +97,11 @@ class SignUpPasswordViewController : UIViewController {
                 signUpNameViewController.bind(viewModel: viewModel)
                 self.navigationController?.pushViewController(signUpNameViewController, animated: true)
             })
+        pwTextField.rx.text
+            .asObservable()
+            .subscribe(onNext : { pw in
+                viewModel.password = pw ?? ""
+            }).disposed(by: disposeBag)
     }
     
     

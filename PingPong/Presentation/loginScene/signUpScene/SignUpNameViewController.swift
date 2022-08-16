@@ -8,13 +8,14 @@
 import Foundation
 import UIKit
 import FirebaseAuth
+import RxSwift
 
 //회원가입 이름입력 (마지막)
 class SignUpNameViewController : UIViewController {
     let pleaseNameLabel = UILabel()
     let nameTextField = UITextField()
     let nextButton = UIButton()
-    
+    let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -62,6 +63,7 @@ class SignUpNameViewController : UIViewController {
         pleaseNameLabel.font = .systemFont(ofSize: 16)
         
         nameTextField.font = .systemFont(ofSize: 14)
+        nameTextField.autocapitalizationType = .none
         nameTextField.placeholder = "이름을 입력해주세요."
         nameTextField.layer.borderWidth = 1
         nameTextField.layer.cornerRadius = 5
@@ -73,14 +75,42 @@ class SignUpNameViewController : UIViewController {
     }
     func bind(viewModel : SignUpViewModel){
         
+        nameTextField.rx.text
+            .asObservable()
+            .subscribe(onNext : { name in
+                viewModel.userName = name ?? ""
+            }).disposed(by: disposeBag)
+        
         //다음 버튼 이벤트
         nextButton.rx.tap.asObservable()
             .subscribe(onNext : {
-                Auth.auth().signIn(withEmail: viewModel.email, password: viewModel.password, completion: { authResult, error in
-                   
+                
+              //파이어베이스 회원가입
+                print("viewmodel : \(viewModel)")
+                Auth.auth().createUser(withEmail: viewModel.email, password: viewModel.password) { authResult, error in
+                    print(authResult?.description)
                     
-                })
+                    print("converted email : \(viewModel.email)")
+                    DatabaseManager.shared.updateUser(with: .init(id: authResult.self!.user.uid.description,
+                                                                  email: viewModel.email,
+                                                                  emailKey: viewModel.emailKey,
+                                                                  userName: self.nameTextField.text!,
+                                                                  role: viewModel.role,
+                                                                  phoneNumber: ""),
+                                                      completion: { result in
+                        if result {
+                            print("가입 성공")
+                        }else{
+                            print("가입에 실패하였습니다.")
+                        }
+                        
+                    })
+                }
+                
+                
             })
+       
+        
     }
     
      
