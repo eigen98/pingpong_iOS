@@ -22,16 +22,16 @@ class TabmanController : TabmanViewController{
         
         layout()
         
-        let classListVC = UIViewController()
-        let callendarVC = UIViewController()
+        let classListVC = ClassListVC()
+        let callendarVC = CalendarVC()
         
         viewControllers.append(classListVC)
         viewControllers.append(callendarVC)
         
         dataSource = self
-        let allCustomBar = TMBarView< TMHorizontalBarLayout , TMLabelBarButton , HomeCustomBarIndicator>()
+//        let allCustomBar = TMBarView< TMHorizontalBarLayout , TMLabelBarButton , HomeCustomBarIndicator>()
     
-        let bar =  allCustomBar // TMBar.ButtonBar()
+        let bar =  TMBar.ButtonBar()
         bar.layout.transitionStyle = .snap // Customize
         bar.indicator.overscrollBehavior = .compress
         bar.indicator.transitionStyle = .snap
@@ -55,16 +55,16 @@ class TabmanController : TabmanViewController{
         }
         
         
-        tabBackgroundView.layer.cornerRadius = 20
-        tabBackgroundView.layer.borderWidth = 1
-        tabBackgroundView.layer.borderColor = UIColor(red: 0.269, green: 0.36, blue: 0.837, alpha: 1).cgColor
+//        tabBackgroundView.layer.cornerRadius = 20
+//        tabBackgroundView.layer.borderWidth = 1
+//        tabBackgroundView.layer.borderColor = UIColor(red: 0.269, green: 0.36, blue: 0.837, alpha: 1).cgColor
         
     }
     
 }
 extension TabmanController: PageboyViewControllerDataSource, TMBarDataSource {
     
-    func settingTabBar (ctBar : TMBarView<TMHorizontalBarLayout, TMLabelBarButton , HomeCustomBarIndicator>) {
+    func settingTabBar (ctBar : TMBar.ButtonBar) {
       
         
         ctBar.layout.transitionStyle = .none
@@ -72,7 +72,7 @@ extension TabmanController: PageboyViewControllerDataSource, TMBarDataSource {
 //            $0.width.equalTo(height/2)
 //        }
         // 왼쪽 여백주기
-        ctBar.layout.contentInset = UIEdgeInsets(top: 0.0, left: 8.0, bottom: 0.0, right: 8.0)
+        ctBar.layout.contentInset = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
         
         // 간격
         ctBar.spacing = 16
@@ -82,14 +82,14 @@ extension TabmanController: PageboyViewControllerDataSource, TMBarDataSource {
         // 선택 / 안선택 색 + font size
         ctBar.buttons.customize { (button) in
             button.tintColor = .gray
-           // button.selectedTintColor = .black
-           // button.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-           // button.selectedFont = UIFont.systemFont(ofSize: 18, weight: .semibold)
+            button.selectedTintColor = .black
+            button.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+            button.selectedFont = UIFont.systemFont(ofSize: 18, weight: .semibold)
         }
         
         // 인디케이터 (아래 바 부분)
-        
-       // ctBar.indicator.weight = .custom(value: 2)
+        ctBar.indicator.cornerStyle = .eliptical
+        ctBar.indicator.weight = .custom(value: 5)
         ctBar.indicator.tintColor = .blue
 //        ctBar.indicator.snp.makeConstraints{
 //            $0.width.equalTo(height/2)

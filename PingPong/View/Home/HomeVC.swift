@@ -34,14 +34,15 @@ class HomeVC : UIViewController {
         self.view.addSubview(logoImg)
         logoImg.snp.makeConstraints{
             $0.leading.equalToSuperview().offset(16)
-            $0.top.equalToSuperview().offset(16)
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
             $0.width.equalTo(88)
             $0.height.equalTo(17)
         }
         
         self.view.addSubview(settingBtn)
         settingBtn.snp.makeConstraints{
-            $0.trailing.top.equalToSuperview().inset(16)
+            $0.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            $0.trailing.equalToSuperview().inset(16)
             $0.width.height.equalTo(24)
         }
         
@@ -58,7 +59,7 @@ class HomeVC : UIViewController {
         }
         tabbarContainer.snp.makeConstraints{
             $0.top.equalTo(statusClassLabel.snp.bottom).offset(50)
-            $0.leading.trailing.equalToSuperview().inset(16)
+            $0.leading.trailing.equalToSuperview().inset(8)
             $0.bottom.equalToSuperview().inset(16)
         }
         
