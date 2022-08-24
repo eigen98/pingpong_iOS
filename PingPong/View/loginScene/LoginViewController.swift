@@ -12,6 +12,7 @@ import UIKit
 import SnapKit
 import SwiftUI
 import GameKit
+import FirebaseAuth
 
 class LoginViewController : UIViewController {
     
@@ -47,7 +48,7 @@ class LoginViewController : UIViewController {
         attribute()
         layout()
         
-        
+        print("로그인 화면")
         
         
     }
@@ -67,6 +68,7 @@ class LoginViewController : UIViewController {
         pwTextField.rx.text.orEmpty
             .bind(to: validation.passwordText)
             .disposed(by: disposeBag)
+        
         //비밀번호 숨기기 버튼
         pwShowButtn.rx.tap
             .asObservable()
@@ -121,6 +123,12 @@ class LoginViewController : UIViewController {
             .asDriver(onErrorJustReturn: false)
             .drive( onNext : {result in
                 print("이메일 형식이 맞나요? \(result)")
+                if result {
+                    self.loginButton.isEnabled = true
+                }else{
+                    self.loginButton.isEnabled = false
+                }
+                
             }).disposed(by: disposeBag)
         
         let passwordValidObservable = validation.isPasswordValid
@@ -129,6 +137,11 @@ class LoginViewController : UIViewController {
             .asDriver(onErrorJustReturn: false)
             .drive( onNext : { result in
                 print("비밀번호 형식 맞나요? \(result)")
+                if result {
+                    self.loginButton.isEnabled = true
+                }else{
+                    self.loginButton.isEnabled = false
+                }
             }).disposed(by: disposeBag)
         
         
@@ -139,7 +152,27 @@ class LoginViewController : UIViewController {
         
         loginButton.rx.tap.asSignal().emit(onNext : {
             print("로그인 요청 보냄")
-        })
+            let convertedEmail = DatabaseManager.convertEmail(email: self.emailTextField.text! ?? "")
+            Auth.auth().signIn(withEmail: self.emailTextField.text!, password: self.pwTextField.text!) { [weak self] authResult, error in
+              guard let strongSelf = self else { return }
+                
+                DatabaseManager.shared.checkRole(email: convertedEmail,
+                                                  completion: { result in
+                    if result == 0 {
+                        print("선생님입니다.")
+                        
+                    }else{
+                        print("학생입니다.")
+                    }
+                    
+                })
+              
+                let homeViewController = HomeVC()
+                let homeViewModel = HomeViewModel()
+                //homeViewController.bind(viewModel: homeViewModel)
+                self?.navigationController?.pushViewController(homeViewController, animated: true)
+            }
+        }).disposed(by: disposeBag)
         
         
         
@@ -243,6 +276,7 @@ class LoginViewController : UIViewController {
         emailTextField.placeholder = "이메일을 입력해주세요"
         emailTextField.font = .systemFont(ofSize: 14)
         emailTextField.addLeftPadding() //텍스트 마진값 설정 (익스텐션 추가)
+        self.emailTextField.autocapitalizationType = .none
         
         pwTextField.layer.borderWidth = 1
         pwTextField.layer.cornerRadius = 5
@@ -250,6 +284,7 @@ class LoginViewController : UIViewController {
         pwTextField.font = .systemFont(ofSize: 14)
         pwTextField.isSecureTextEntry = true
         pwTextField.addLeftPadding() //텍스트 마진값 설정 (익스텐션 추가)
+        self.pwTextField.autocapitalizationType = .none
         
         pwShowButtn.setImage(UIImage(systemName: "eye"), for: .normal) //eye.slash
         pwShowButtn.tintColor = .gray

@@ -35,12 +35,12 @@ class TeacherClassVC : UIViewController{
         layout()
         attribute()
         
-        // 테이블뷰 셀 설정.
-        let bundle = Bundle(for: TimelineTableViewCell.self)
-        let nibUrl = bundle.url(forResource: "TimelineTableViewCell", withExtension: "bundle")
-        let timelineTableViewCellNib = UINib(nibName: "TimelineTableViewCell",
-            bundle: Bundle(url: nibUrl!)!)
-        timeLineTableView.register(timelineTableViewCellNib, forCellReuseIdentifier: "TimelineTableViewCell")
+//        // 테이블뷰 셀 설정.
+//        let bundle = Bundle(for: TimelineTableViewCell.self)
+//        let nibUrl = bundle.url(forResource: "TimelineTableViewCell", withExtension: "bundle")
+//        let timelineTableViewCellNib = UINib(nibName: "TimelineTableViewCell",
+//            bundle: Bundle(url: nibUrl)!)
+//        timeLineTableView.register(timelineTableViewCellNib, forCellReuseIdentifier: "TimelineTableViewCell")
     
     }
     

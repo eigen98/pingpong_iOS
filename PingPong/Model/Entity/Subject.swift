@@ -10,8 +10,8 @@ import RxSwift
 import RxDataSources
 
 //과목
-struct Subject {
-    var id : Int
+struct Subject : Codable {
+    var id : String
     var subjectName : String
     var salary : Int
     var monthlyCnt : String //정산일
