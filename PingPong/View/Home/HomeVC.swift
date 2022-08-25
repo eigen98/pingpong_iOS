@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Tabman
+import FirebaseAuth
 
 //홈화면
 class HomeVC : UIViewController {
@@ -27,7 +28,14 @@ class HomeVC : UIViewController {
         
         layout()
         attribute()
+        let user = Auth.auth().currentUser
+        let useremail = user!.email!
+        let convertedEmail = DatabaseManager.convertEmail(email: useremail)
         
+        DatabaseManager.shared.getClassList(idEmail: convertedEmail, completion: {result in
+            print("getClass result : \(result)")
+            
+        })
     }
     
     func layout(){
@@ -86,4 +94,6 @@ class HomeVC : UIViewController {
         tabmanController.view.frame = self.tabbarContainer.frame
         tabbarContainer.addSubview(tabmanController.view)
     }
+    
+    
 }

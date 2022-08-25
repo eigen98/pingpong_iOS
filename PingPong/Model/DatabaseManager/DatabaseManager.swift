@@ -128,18 +128,29 @@ extension DatabaseManager {
     
     public func getClassList(idEmail : String, completion : @escaping ([Subject]) -> Void){
         
-        database.child("subject").child(idEmail).observeSingleEvent(of : .value, with: { snapshot in
+        database.child("subjects").child(idEmail).observeSingleEvent(of : .value, with: { snapshot in
             //snapshot의 값을 딕셔너리 형태로 변경해줍니다.
             guard let snapData = snapshot.value as? [String:Any] else {return}
             //Data를 JSON형태로 변경해줍니다.
-            let data = try! JSONSerialization.data(withJSONObject: Array(snapData.values), options: [])
-            print("\(snapData.values)")
-            print("\(data)")
+            do{
+                let data = try JSONSerialization.data(withJSONObject: Array(snapData.values), options: [])
+                print("\(snapData.values)")
+                print("\(data)")
+                
+                let decoder = JSONDecoder()
+                let subjectList = try decoder.decode([Subject].self, from: data)
+                print(subjectList)
+                completion(subjectList)
+            }catch (let error){
+                print(error)
+            }
+            
+           
                         
-            let decoder = JSONDecoder()
-            let singList = try decoder.decode([Sing].self, from: data)
+            
+            
+            
             
         })
-        
     }
 }
